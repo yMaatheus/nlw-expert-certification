@@ -1,12 +1,15 @@
 package tech.ymaatheus.certification_nlw.modules.students.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tech.ymaatheus.certification_nlw.modules.students.dto.StudentCertificationAnswerDTO;
 import tech.ymaatheus.certification_nlw.modules.students.dto.VerifyHasCertificationDTO;
+import tech.ymaatheus.certification_nlw.modules.students.useCases.StudentCertificationAnswersUseCase;
 import tech.ymaatheus.certification_nlw.modules.students.useCases.VerifyIfHasCertificationUseCase;
 
 @RestController
@@ -15,6 +18,9 @@ public class StudentController {
 
   @Autowired
   private VerifyIfHasCertificationUseCase verifyIfHasCertificationUseCase;
+
+  @Autowired
+  private StudentCertificationAnswersUseCase studentCertificationAnswersUseCase;
   
   @PostMapping("/verifyIfHasCertification")
   public String verifyIfHasCertification(@RequestBody VerifyHasCertificationDTO verifyHasCertificationDTO) {
@@ -24,5 +30,16 @@ public class StudentController {
       return "Usuário já fez a prova.";
     }
     return "Usuário pode fazer a prova.";
+  }
+
+  @PostMapping("/certification/answer")
+  public ResponseEntity<Object> certificationAnswer(@RequestBody StudentCertificationAnswerDTO studentCertificationAnswerDTO) throws Exception {
+    try {
+
+      var result = this.studentCertificationAnswersUseCase.execute(studentCertificationAnswerDTO);
+      return ResponseEntity.ok().body(result);
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
   }
 }
