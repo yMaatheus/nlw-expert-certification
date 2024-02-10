@@ -37,7 +37,7 @@ public class CertificationStudentEntity {
   private String technology;
 
   @Column(length = 10)
-  private int grate;
+  private int grade;
 
   @Column(name = "student_id")
   private UUID studentID;
